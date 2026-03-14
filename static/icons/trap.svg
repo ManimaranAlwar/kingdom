@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Trap">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#c7c7c7"/>
+    </linearGradient>
+    <filter id="s" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="4" dy="4" stdDeviation="0" flood-color="#140a2a" flood-opacity="1"/>
+    </filter>
+  </defs>
+  <g filter="url(#s)" stroke="#000" stroke-width="6" stroke-linecap="round">
+    <path d="M18 28h92v72H18z" fill="rgba(0,0,0,0.08)" stroke-linejoin="round"/>
+    <path d="M24 36c18 18 30 18 40 0 10-18 22-18 40 0" fill="none"/>
+    <path d="M24 92c18-18 30-18 40 0 10 18 22 18 40 0" fill="none"/>
+    <path d="M28 64h72" />
+    <path d="M64 32v64" />
+    <path d="M38 46l52 36" />
+    <path d="M90 46L38 82" />
+    <circle cx="64" cy="64" r="10" fill="url(#g)" stroke-linejoin="round"/>
+    <path d="M54 66c4 6 16 6 20 0" fill="none"/>
+  </g>
+</svg>

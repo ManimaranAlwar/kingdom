@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Magical Kingdom Quest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='game.css') }}" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="logoRow">
+        <div class="logoMark" aria-hidden="true">
+          <img class="logoIco" src="{{ url_for('static', filename='icons/crown.svg') }}" alt="" />
+          <img class="logoIco" src="{{ url_for('static', filename='icons/star.svg') }}" alt="" />
+          <img class="logoIco" src="{{ url_for('static', filename='icons/crystal.svg') }}" alt="" />
+        </div>
+        <div class="logoText">
+          <div class="logoTitle">The Magical Kingdom Quest</div>
+          <div class="logoSub">A comical race to the Golden Castle (bring coins, courage, and snacks).</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section id="startScreen" class="screen">
+        <div class="panel panel-pop">
+          <h1 class="h1">Pick 2–4 Heroes</h1>
+          <p class="sub">
+            First to reach <b>Space 30</b> (The Golden Castle) wins the <b>Magic Crown</b>. Beware dragons, traps, and
+            extremely rude terrain.
+          </p>
+
+          <div class="heroGrid" id="heroGrid" aria-label="Hero selection"></div>
+
+          <div class="row">
+            <button id="startBtn" class="btn btn-gold" disabled>Start the Quest</button>
+            <div class="hint" id="startHint">Select at least 2 heroes to begin.</div>
+          </div>
+        </div>
+
+        <div class="panel rules">
+          <h2 class="h2">How It Works</h2>
+          <ul class="rulesList">
+            <li><b>Roll</b> 1d6 → <b>Move</b> that many spaces → <b>Resolve</b> the tile.</li>
+            <li>
+              <img class="miniIco" src="{{ url_for('static', filename='icons/star.svg') }}" alt="" />
+              <b>Star</b>: Answer a Magic Question. Correct = <b>+2</b> spaces.
+            </li>
+            <li>
+              <img class="miniIco" src="{{ url_for('static', filename='icons/dragon.svg') }}" alt="" />
+              <b>Dragon</b>: Get shooed! <b>-3</b> spaces (unless you shield/bribe).
+            </li>
+            <li>
+              <img class="miniIco" src="{{ url_for('static', filename='icons/crystal.svg') }}" alt="" />
+              <b>Crystal</b>: Draw a Magic Card (loot, chaos, or suspiciously helpful raccoons).
+            </li>
+            <li>
+              <img class="miniIco" src="{{ url_for('static', filename='icons/trap.svg') }}" alt="" />
+              <b>Trap</b>: Stunned! <b>Skip next turn</b> (unless you ward/disarm).
+            </li>
+            <li>Exact win: Reach Space 30. If you overshoot, you BONK the castle wall and bounce back.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="gameScreen" class="screen hidden">
+        <div class="boardWrap panel panel-pop">
+          <div class="boardHeader">
+            <div class="legend">
+              <span class="chip chip-forest">Forest (1–8)</span>
+              <span class="chip chip-highland">Highland (9–12)</span>
+              <span class="chip chip-cave">Cave &amp; Mountains (13–24)</span>
+              <span class="chip chip-castle">Castle (25–30)</span>
+            </div>
+            <div class="legend">
+              <span class="chip chip-star">
+                <img class="miniIco" src="{{ url_for('static', filename='icons/star.svg') }}" alt="" /> Magic Trial
+              </span>
+              <span class="chip chip-dragon">
+                <img class="miniIco" src="{{ url_for('static', filename='icons/dragon.svg') }}" alt="" /> Dragon
+              </span>
+              <span class="chip chip-crystal">
+                <img class="miniIco" src="{{ url_for('static', filename='icons/crystal.svg') }}" alt="" /> Crystal
+              </span>
+              <span class="chip chip-trap">
+                <img class="miniIco" src="{{ url_for('static', filename='icons/trap.svg') }}" alt="" /> Trap
+              </span>
+            </div>
+          </div>
+
+          <div id="board" class="board" aria-label="Game board"></div>
+          <div id="toastHost" class="toastHost" aria-live="polite" aria-atomic="true"></div>
+        </div>
+
+        <aside class="sidebar">
+          <div class="panel panel-pop">
+            <div class="current">
+              <div class="avatarRing" id="currentRing">
+                <img id="currentAvatar" class="avatar" alt="Current player" />
+              </div>
+              <div class="now">
+                <div class="nowTitle">Current Hero</div>
+                <div class="nowName" id="currentName">—</div>
+                <div class="nowMeta">
+                  <span class="pill" id="currentCoins">0</span>
+                  <span class="pill" id="currentPos">1</span>
+                </div>
+              </div>
+            </div>
+            <div class="message" id="message">Select heroes to begin!</div>
+          </div>
+
+          <div class="panel panel-pop">
+            <div class="diceRow">
+              <button id="rollBtn" class="btn btn-pop btn-gold">Roll!</button>
+              <button id="useRerollBtn" class="btn btn-pop btn-purple hidden" title="Use Reroll Raccoon">
+                <img class="miniIco" src="{{ url_for('static', filename='icons/reroll.svg') }}" alt="" /> Reroll
+              </button>
+              <div id="die" class="die" role="img" aria-label="Die">?</div>
+            </div>
+            <div class="shop">
+              <div class="shopTitle">Magical Power Shop (Coins)</div>
+              <div class="shopBtns">
+                <button id="buyWardBtn" class="btn btn-mini btn-blue">
+                  <img class="miniIco" src="{{ url_for('static', filename='icons/ward.svg') }}" alt="" /> Buy Ward (1)
+                </button>
+                <button id="buyShieldBtn" class="btn btn-mini btn-green">
+                  <img class="miniIco" src="{{ url_for('static', filename='icons/shield.svg') }}" alt="" /> Buy Shield (2)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel panel-pop">
+            <div class="invTitle">Inventory</div>
+            <div id="inventory" class="inventory"></div>
+            <div class="invHint">Tip: Wards cancel Traps. Shields block Dragons. Reroll raccoons reroll… raccoonly.</div>
+          </div>
+
+          <div class="panel panel-pop">
+            <button id="restartBtn" class="btn btn-pop btn-red">Restart</button>
+          </div>
+        </aside>
+      </section>
+
+      <section id="winScreen" class="screen hidden">
+        <div class="panel panel-pop victory">
+          <div class="crown" aria-hidden="true">
+            <img class="crownIco" src="{{ url_for('static', filename='icons/crown.svg') }}" alt="" />
+          </div>
+          <h2 class="h1">We Have a Winner!</h2>
+          <div class="winnerLine">
+            <img id="winnerAvatar" class="winnerAvatar" alt="Winner avatar" />
+            <div id="winnerText" class="winnerText"></div>
+          </div>
+          <div class="row">
+            <button id="playAgainBtn" class="btn btn-gold">Play Again</button>
+          </div>
+          <div id="confettiHost" class="confettiHost" aria-hidden="true"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modals -->
+    <div id="modalOverlay" class="overlay hidden" role="dialog" aria-modal="true">
+      <div class="modal panel panel-pop">
+        <div class="modalTitle" id="modalTitle">—</div>
+        <div class="modalBody" id="modalBody"></div>
+        <div class="modalBtns" id="modalBtns"></div>
+      </div>
+    </div>
+
+    <script>
+      window.MKQ_ASSETS = {
+        wizard: "{{ url_for('static', filename='wizard.png') }}",
+        fairy: "{{ url_for('static', filename='fairy.png') }}",
+        knight: "{{ url_for('static', filename='knight.png') }}",
+        dragon: "{{ url_for('static', filename='dragon_rider.png') }}",
+        home: "{{ url_for('static', filename='wizard_home.png') }}",
+      };
+
+      window.MKQ_ICONS = {
+        star: "{{ url_for('static', filename='icons/star.svg') }}",
+        dragon: "{{ url_for('static', filename='icons/dragon.svg') }}",
+        crystal: "{{ url_for('static', filename='icons/crystal.svg') }}",
+        trap: "{{ url_for('static', filename='icons/trap.svg') }}",
+        blank: "{{ url_for('static', filename='icons/blank.svg') }}",
+        castle: "{{ url_for('static', filename='icons/castle.svg') }}",
+        coin: "{{ url_for('static', filename='icons/coin.svg') }}",
+        compass: "{{ url_for('static', filename='icons/compass.svg') }}",
+        dice: "{{ url_for('static', filename='icons/dice.svg') }}",
+        ward: "{{ url_for('static', filename='icons/ward.svg') }}",
+        shield: "{{ url_for('static', filename='icons/shield.svg') }}",
+        reroll: "{{ url_for('static', filename='icons/reroll.svg') }}",
+      };
+    </script>
+    <script src="{{ url_for('static', filename='game.js') }}"></script>
+  </body>
+</html>
