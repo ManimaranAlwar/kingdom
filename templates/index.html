@@ -22,7 +22,9 @@
         </div>
         <div class="logoText">
           <div class="logoTitle">The Magical Kingdom Quest</div>
-          <div class="logoSub">A comical race to the Golden Castle (bring coins, courage, and snacks).</div>
+        </div>
+        <div class="topActions">
+          <button id="muteBtn" class="btn btn-mini btn-purple" type="button" aria-pressed="false">Sound: On</button>
         </div>
       </div>
     </header>
@@ -32,7 +34,7 @@
         <div class="panel panel-pop">
           <h1 class="h1">Pick 2–4 Heroes</h1>
           <p class="sub">
-            First to reach <b>Space 30</b> (The Golden Castle) wins the <b>Magic Crown</b>. Beware dragons, traps, and
+            First to reach <b>Space 54</b> (The Golden Castle) wins the <b>Magic Crown</b>. Beware dragons, traps, and
             extremely rude terrain.
           </p>
 
@@ -58,13 +60,13 @@
             </li>
             <li>
               <img class="miniIco" src="{{ url_for('static', filename='icons/crystal.svg') }}" alt="" />
-              <b>Crystal</b>: Draw a Magic Card (loot, chaos, or suspiciously helpful raccoons).
+              <b>Crystal</b>: Draw a Magic Card.
             </li>
             <li>
               <img class="miniIco" src="{{ url_for('static', filename='icons/trap.svg') }}" alt="" />
-              <b>Trap</b>: Stunned! <b>Skip next turn</b> (unless you ward/disarm).
+              <b>Trap</b>: Stunned! <b>Skip next turn</b> (unless you shield/disarm).
             </li>
-            <li>Exact win: Reach Space 30. If you overshoot, you BONK the castle wall and bounce back.</li>
+            <li>Exact win: Reach Space 54. If you overshoot, you BONK the castle wall and bounce back.</li>
           </ul>
         </div>
       </section>
@@ -72,12 +74,6 @@
       <section id="gameScreen" class="screen hidden">
         <div class="boardWrap panel panel-pop">
           <div class="boardHeader">
-            <div class="legend">
-              <span class="chip chip-forest">Forest (1–8)</span>
-              <span class="chip chip-highland">Highland (9–12)</span>
-              <span class="chip chip-cave">Cave &amp; Mountains (13–24)</span>
-              <span class="chip chip-castle">Castle (25–30)</span>
-            </div>
             <div class="legend">
               <span class="chip chip-star">
                 <img class="miniIco" src="{{ url_for('static', filename='icons/star.svg') }}" alt="" /> Magic Trial
@@ -109,28 +105,22 @@
                 <div class="nowName" id="currentName">—</div>
                 <div class="nowMeta">
                   <span class="pill" id="currentCoins">0</span>
+                  <span class="pill" id="currentShields">0</span>
                   <span class="pill" id="currentPos">1</span>
                 </div>
               </div>
             </div>
-            <div class="message" id="message">Select heroes to begin!</div>
+            <div class="message" id="message" role="status" aria-live="polite">Select heroes to begin!</div>
           </div>
 
           <div class="panel panel-pop">
             <div class="diceRow">
-              <button id="rollBtn" class="btn btn-pop btn-gold">Roll!</button>
-              <button id="useRerollBtn" class="btn btn-pop btn-purple hidden" title="Use Reroll Raccoon">
-                <img class="miniIco" src="{{ url_for('static', filename='icons/reroll.svg') }}" alt="" /> Reroll
-              </button>
-              <div id="die" class="die" role="img" aria-label="Die">?</div>
+              <div id="die" class="die" role="button" tabindex="0" aria-label="Die">?</div>
             </div>
             <div class="shop">
-              <div class="shopTitle">Magical Power Shop (Coins)</div>
+              <div class="shopTitle">Shield Shop (Coins)</div>
               <div class="shopBtns">
-                <button id="buyWardBtn" class="btn btn-mini btn-blue">
-                  <img class="miniIco" src="{{ url_for('static', filename='icons/ward.svg') }}" alt="" /> Buy Ward (1)
-                </button>
-                <button id="buyShieldBtn" class="btn btn-mini btn-green">
+                <button id="buyShieldBtn" class="btn btn-mini btn-green" type="button">
                   <img class="miniIco" src="{{ url_for('static', filename='icons/shield.svg') }}" alt="" /> Buy Shield (2)
                 </button>
               </div>
@@ -138,13 +128,13 @@
           </div>
 
           <div class="panel panel-pop">
-            <div class="invTitle">Inventory</div>
-            <div id="inventory" class="inventory"></div>
-            <div class="invHint">Tip: Wards cancel Traps. Shields block Dragons. Reroll raccoons reroll… raccoonly.</div>
+            <div class="invTitle">Heroes</div>
+            <div id="playerStats" class="inventory" aria-label="Player stats"></div>
           </div>
 
           <div class="panel panel-pop">
-            <button id="restartBtn" class="btn btn-pop btn-red">Restart</button>
+            <button id="rulesBtn" class="btn btn-pop btn-blue" type="button">Rules</button>
+            <button id="restartBtn" class="btn btn-pop btn-red" type="button">Restart</button>
           </div>
         </aside>
       </section>
@@ -160,14 +150,13 @@
             <div id="winnerText" class="winnerText"></div>
           </div>
           <div class="row">
-            <button id="playAgainBtn" class="btn btn-gold">Play Again</button>
+            <button id="playAgainBtn" class="btn btn-gold" type="button">Play Again</button>
           </div>
           <div id="confettiHost" class="confettiHost" aria-hidden="true"></div>
         </div>
       </section>
     </main>
 
-    <!-- Modals -->
     <div id="modalOverlay" class="overlay hidden" role="dialog" aria-modal="true">
       <div class="modal panel panel-pop">
         <div class="modalTitle" id="modalTitle">—</div>
@@ -195,9 +184,7 @@
         coin: "{{ url_for('static', filename='icons/coin.svg') }}",
         compass: "{{ url_for('static', filename='icons/compass.svg') }}",
         dice: "{{ url_for('static', filename='icons/dice.svg') }}",
-        ward: "{{ url_for('static', filename='icons/ward.svg') }}",
         shield: "{{ url_for('static', filename='icons/shield.svg') }}",
-        reroll: "{{ url_for('static', filename='icons/reroll.svg') }}",
       };
     </script>
     <script src="{{ url_for('static', filename='game.js') }}"></script>

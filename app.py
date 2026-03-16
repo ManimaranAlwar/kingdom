@@ -1,4 +1,5 @@
 import random
+
 from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
@@ -7,7 +8,7 @@ app.secret_key = "magical-kingdom-quest-dev"
 
 MAGIC_QUESTIONS = [
     {
-        "question": "A wizard’s favorite snack is...",
+        "question": "A wizard's favorite snack is...",
         "options": ["Spell-os cereal", "Broomstick broccoli", "Invisible ice cream", "Potion pickles"],
         "answerIndex": 0,
     },
@@ -22,7 +23,7 @@ MAGIC_QUESTIONS = [
         "answerIndex": 2,
     },
     {
-        "question": "A fairy’s GPS stands for...",
+        "question": "A fairy's GPS stands for...",
         "options": ["Glitter Position Sparkles", "Goblin Parking System", "Grand Potion Soup", "Go Please Slowly"],
         "answerIndex": 0,
     },
@@ -37,7 +38,7 @@ MAGIC_QUESTIONS = [
         "answerIndex": 0,
     },
     {
-        "question": "The Golden Castle’s password is most likely...",
+        "question": "The Golden Castle's password is most likely...",
         "options": ["1234", "PLEASEANDTHANKYOU", "I AM A TURNIP", "DRAGONFOOD"],
         "answerIndex": 1,
     },
@@ -86,36 +87,22 @@ MAGIC_CARDS = [
         "value": 1,
     },
     {
-        "id": "mystic_ward",
-        "name": "Mystic Ward",
-        "text": "Bubble-shield! Cancel ONE Trap (stun) when it happens.",
-        "type": "item",
-        "item": "ward",
-    },
-    {
         "id": "dragon_shield",
         "name": "Dragon-Proof Shield",
-        "text": "Anti-bite technology! Ignore ONE Dragon encounter.",
+        "text": "Anti-bite technology! Gain +1 Shield (blocks a Dragon or a Trap).",
         "type": "item",
         "item": "shield",
     },
-    {
-        "id": "reroll_raccoon",
-        "name": "Reroll Raccoon",
-        "text": "A raccoon steals your dice and brings it back... improved. Reroll once.",
-        "type": "item",
-        "item": "reroll",
-    },
 ]
 
-@app.route('/')
+
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
 @app.get("/api/magic-question")
 def api_magic_question():
-    # optional seed so tests / replays can be deterministic if desired
     seed = request.args.get("seed")
     if seed is not None:
         rnd = random.Random(seed)
@@ -136,5 +123,5 @@ def api_magic_card():
     return jsonify(card)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True, port=5000)
